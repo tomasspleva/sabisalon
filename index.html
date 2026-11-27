@@ -1,0 +1,512 @@
+<title>Sabi Pardubice</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Sabi, kosmetický salon v Pardubicích. Kosmetická ošetření a laminace obočí. Online rezervace.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap">
+<style>
+/* =====================================================================
+   VZHLED NA JEDNOM MÍSTĚ
+   Až přijde vlastní grafika, mění se jen tento blok (barvy, fonty, obrázky).
+   Struktura stránky a kód níže zůstávají stejné.
+   Layout: jednostránkový web, sekce pod sebou, úzký textový sloupec,
+   rezervace jako výrazný pruh uprostřed stránky.
+   ===================================================================== */
+:root {
+  /* Barvy (světlý režim) */
+  --bg: #faf8f8;          /* pozadí stránky */
+  --surface: #f2ecee;     /* plochy, karty, pruhy */
+  --line: #e2d8dc;        /* tenké linky */
+  --ink: #2b2326;         /* hlavní text */
+  --muted: #74686d;       /* doplňkový text */
+  --accent: #7b4a5d;      /* značková barva: tlačítka, odkazy */
+  --accent-ink: #ffffff;  /* text na značkové barvě */
+  --accent-soft: #ead9e0; /* jemný podklad značkové barvy */
+  --note: #8a5a00;        /* štítek "odhad" */
+  --note-bg: #fbefd6;
+
+  /* Fonty */
+  --font-display: "Cormorant", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-body: "Jost", "Helvetica Neue", Arial, sans-serif;
+
+  /* Obrázky: zatím jemné výplně, později url('fotky/hero.jpg') apod. */
+  --img-hero: radial-gradient(120% 90% at 70% 20%, #ead9e0 0%, #e4dadd 45%, #d9cdd2 100%);
+  --img-about: linear-gradient(160deg, #e9e1e4 0%, #d8c9cf 100%);
+  --img-brow: linear-gradient(200deg, #efe7ea 0%, #dccdd3 100%);
+
+  /* Tvar a rozměry */
+  --radius: 2px;
+  --radius-pill: 999px;
+  --maxw: 1120px;
+  --text-w: 62ch;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1719; --surface: #251f22; --line: #3a3135; --ink: #f1eaed; --muted: #b3a6ab;
+    --accent: #d7a7b9; --accent-ink: #1b1719; --accent-soft: #3b2a31; --note: #f2c76e; --note-bg: #3a2e14;
+    --img-hero: radial-gradient(120% 90% at 70% 20%, #4a3740 0%, #33282d 50%, #261f22 100%);
+    --img-about: linear-gradient(160deg, #3a2f34 0%, #2a2226 100%);
+    --img-brow: linear-gradient(200deg, #3d3136 0%, #2b2327 100%);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1719; --surface: #251f22; --line: #3a3135; --ink: #f1eaed; --muted: #b3a6ab;
+  --accent: #d7a7b9; --accent-ink: #1b1719; --accent-soft: #3b2a31; --note: #f2c76e; --note-bg: #3a2e14;
+  --img-hero: radial-gradient(120% 90% at 70% 20%, #4a3740 0%, #33282d 50%, #261f22 100%);
+  --img-about: linear-gradient(160deg, #3a2f34 0%, #2a2226 100%);
+  --img-brow: linear-gradient(200deg, #3d3136 0%, #2b2327 100%);
+  color-scheme: dark;
+}
+
+/* ============================ JÁDRO ============================ */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; font-weight: 300; line-height: 1.65; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+a { color: var(--accent); }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; line-height: 1.1; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); }
+h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
+h3 { font-size: 1.55rem; }
+p { margin: 0; }
+.wrap { max-width: var(--maxw); margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+.lead { font-size: 1.15rem; color: var(--muted); max-width: var(--text-w); }
+section { padding-block: clamp(64px, 9vw, 112px); }
+.section-head { display: grid; gap: 14px; margin-bottom: 40px; max-width: var(--text-w); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* štítek pro odhadnuté údaje */
+.odhad { display: inline-block; font-family: var(--font-body); font-size: .68rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--note); background: var(--note-bg); padding: 2px 7px; border-radius: var(--radius-pill); vertical-align: middle; white-space: nowrap; }
+.preview-bar { background: var(--note-bg); color: var(--note); font-size: .85rem; text-align: center; padding-block: 8px; }
+
+/* tlačítka */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 500 .95rem/1 var(--font-body); letter-spacing: .04em; padding: 15px 26px; border-radius: var(--radius-pill); border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); text-decoration: none; cursor: pointer; transition: transform .15s, opacity .15s; }
+.btn:hover { transform: translateY(-1px); opacity: .92; }
+.btn.ghost { background: transparent; color: var(--accent); }
+
+/* hlavička */
+header.site { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+header.site .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 68px; }
+.logo { font-family: var(--font-display); font-size: 1.9rem; font-weight: 600; letter-spacing: .06em; color: var(--ink); text-decoration: none; }
+.logo small { display: block; font-family: var(--font-body); font-size: .62rem; font-weight: 400; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); margin-top: -4px; }
+nav.main { display: flex; align-items: center; gap: 28px; }
+nav.main a { color: var(--ink); text-decoration: none; font-size: .95rem; }
+nav.main a:hover { color: var(--accent); }
+nav.main .btn { padding: 11px 20px; color: var(--accent-ink); }
+.menu-toggle { display: none; background: none; border: 1px solid var(--line); border-radius: var(--radius-pill); color: var(--ink); font: 400 .9rem var(--font-body); padding: 8px 16px; cursor: pointer; }
+@media (max-width: 820px) {
+  .menu-toggle { display: inline-block; }
+  nav.main { position: absolute; top: 68px; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; background: var(--bg); border-bottom: 1px solid var(--line); padding: 8px max(16px, env(safe-area-inset-right, 0px)) 20px max(16px, env(safe-area-inset-left, 0px)); }
+  nav.main:not(.open) { display: none; }
+  nav.main a { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  nav.main .btn { margin-top: 14px; border-bottom: 0; }
+}
+
+/* úvod */
+.hero { padding-block: clamp(40px, 7vw, 88px); }
+.hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.hero-text { display: grid; gap: 22px; min-width: 0; }
+.hero-text h1 em { font-style: italic; color: var(--accent); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+.hero-facts { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 10px; font-size: .9rem; color: var(--muted); }
+.hero-facts span::before { content: "·"; margin-right: 8px; color: var(--accent); }
+.photo { position: relative; border-radius: var(--radius); background-size: cover; background-position: center; display: flex; align-items: flex-end; max-width: 100%; }
+.photo .ph-label { margin: 14px; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); background: color-mix(in srgb, var(--bg) 80%, transparent); padding: 5px 10px; border-radius: var(--radius-pill); }
+.hero .photo { aspect-ratio: 4 / 5; background-image: var(--img-hero); border-top-left-radius: 220px 240px; }
+@media (max-width: 820px) { .hero .wrap { grid-template-columns: 1fr; } .hero .photo { aspect-ratio: 5 / 4; border-top-left-radius: 160px; } }
+
+/* služby a ceník */
+.services { background: var(--surface); }
+.price-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 5vw, 64px); }
+@media (max-width: 820px) { .price-groups { grid-template-columns: 1fr; } }
+.price-group h3 { padding-bottom: 12px; border-bottom: 1px solid var(--ink); margin-bottom: 4px; }
+.price-group > p { color: var(--muted); font-size: .95rem; margin: 10px 0 8px; }
+.price-list { list-style: none; margin: 0; padding: 0; }
+.price-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 20px; padding-block: 16px; border-bottom: 1px solid var(--line); }
+.price-list .name { font-weight: 400; }
+.price-list .price { font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.price-list .desc { grid-column: 1 / -1; font-size: .9rem; color: var(--muted); }
+.price-list .dur { color: var(--muted); font-size: .85rem; font-weight: 300; margin-left: 6px; white-space: nowrap; }
+.services-note { margin-top: 32px; font-size: .9rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+
+/* laminace: postup */
+.brow .wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.brow .photo { aspect-ratio: 1 / 1; background-image: var(--img-brow); border-radius: 50%; }
+.brow-text { display: grid; gap: 20px; min-width: 0; }
+.steps { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 18px; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; counter-increment: s; }
+.steps li::before { content: counter(s); font-family: var(--font-display); font-size: 1.6rem; color: var(--accent); line-height: 1.2; }
+.steps strong { font-weight: 500; display: block; }
+.steps span { color: var(--muted); font-size: .95rem; }
+@media (max-width: 820px) { .brow .wrap { grid-template-columns: 1fr; } .brow .photo { max-width: 340px; width: 100%; margin: 0 auto; } }
+
+/* o nás */
+.about .wrap { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+.about .photo { aspect-ratio: 3 / 4; background-image: var(--img-about); }
+.about-text { display: grid; gap: 20px; min-width: 0; }
+.about-text p { max-width: var(--text-w); }
+.values { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 16px; padding-top: 24px; border-top: 1px solid var(--line); }
+.values h3 { font-size: 1.25rem; margin-bottom: 6px; }
+.values p { font-size: .92rem; color: var(--muted); }
+@media (max-width: 820px) { .about .wrap { grid-template-columns: 1fr; } .about .photo { aspect-ratio: 4 / 3; } .values { grid-template-columns: 1fr; } }
+
+/* rezervace */
+.booking { background: var(--accent-soft); }
+.booking .wrap { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+.booking-info { display: grid; gap: 18px; min-width: 0; }
+.booking-info ul { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 6px; }
+.embed-note { font-size: .85rem; color: var(--muted); border: 1px dashed var(--muted); border-radius: var(--radius); padding: 12px 14px; }
+form.book { background: var(--bg); padding: clamp(20px, 4vw, 40px); border-radius: var(--radius); display: grid; gap: 18px; min-width: 0; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label, .field legend { font-size: .85rem; font-weight: 400; letter-spacing: .03em; }
+.row-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 560px) { .row-2 { grid-template-columns: 1fr; } }
+input, select, textarea { font: 300 1rem var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; width: 100%; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+textarea { min-height: 84px; resize: vertical; }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.slots { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.slots input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.slots label { font-variant-numeric: tabular-nums; border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 8px 14px; cursor: pointer; font-size: .92rem; }
+.slots input:checked + label { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.slots input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; color: var(--muted); }
+.check input { width: auto; margin-top: 4px; }
+.form-error { color: var(--note); font-size: .9rem; }
+.done { display: grid; gap: 14px; background: var(--bg); padding: clamp(20px, 4vw, 40px); border-radius: var(--radius); }
+.done dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 18px; margin: 0; }
+.done dt { color: var(--muted); font-size: .9rem; }
+.done dd { margin: 0; }
+@media (max-width: 820px) { .booking .wrap { grid-template-columns: 1fr; } }
+
+/* kontakt */
+.contact-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.contact-grid h3 { font-size: 1.3rem; margin-bottom: 10px; }
+.contact-grid p, .contact-grid dl { color: var(--muted); }
+.hours { display: grid; grid-template-columns: auto auto; justify-content: start; gap: 4px 24px; margin: 0; font-variant-numeric: tabular-nums; }
+.hours dd { margin: 0; }
+.copy-btn { margin-top: 6px; background: none; border: 0; padding: 0; color: var(--accent); font: 400 .85rem var(--font-body); text-decoration: underline; cursor: pointer; }
+.map-ph { margin-top: 40px; height: 220px; background: var(--surface); border-radius: var(--radius); display: grid; place-items: center; color: var(--muted); font-size: .9rem; text-align: center; padding: 16px; }
+@media (max-width: 820px) { .contact-grid { grid-template-columns: 1fr; } }
+
+/* patička */
+footer.site { border-top: 1px solid var(--line); padding-block: 32px; font-size: .85rem; color: var(--muted); }
+footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+/* plovoucí tlačítko rezervace na mobilu */
+.fab { display: none; }
+@media (max-width: 820px) {
+  .fab { display: flex; position: fixed; z-index: 15; left: 0; right: 0; bottom: 0; padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); background: color-mix(in srgb, var(--bg) 94%, transparent); border-top: 1px solid var(--line); }
+  .fab .btn { width: 100%; }
+  footer.site { padding-bottom: 96px; }
+}
+</style>
+
+<div class="preview-bar">Náhled webu. Údaje označené <span class="odhad">odhad</span> jsou zástupné a doplní se skutečnými.</div>
+
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="#uvod">Sabi<small>Pardubice</small></a>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="menu">Menu</button>
+    <nav class="main" id="menu">
+      <a href="#sluzby">Služby a ceník</a>
+      <a href="#o-nas">O nás</a>
+      <a href="#kontakt">Kontakt</a>
+      <a class="btn" href="#rezervace">Rezervovat termín</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ÚVOD -->
+  <section class="hero" id="uvod">
+    <div class="wrap">
+      <div class="hero-text">
+        <p class="eyebrow">Kosmetický salon v Pardubicích</p>
+        <h1>Péče o pleť a obočí <em>v klidu a beze spěchu</em></h1>
+        <p class="lead">Kosmetická ošetření na míru vaší pleti a laminace obočí, která vydrží týdny. Termín si vyberete online během minuty. <span class="odhad">odhad textu</span></p>
+        <div class="hero-actions">
+          <a class="btn" href="#rezervace">Rezervovat online</a>
+          <a class="btn ghost" href="#sluzby">Prohlédnout ceník</a>
+        </div>
+        <div class="hero-facts">
+          <span>Laminace obočí od 790 Kč</span>
+          <span>Ošetření pleti od 890 Kč</span>
+          <span>Palác Hybských, Pardubice</span>
+        </div>
+      </div>
+      <div class="photo" role="img" aria-label="Místo pro hlavní fotografii salonu"><span class="ph-label">Místo pro hlavní fotku</span></div>
+    </div>
+  </section>
+
+  <!-- SLUŽBY A CENÍK -->
+  <section class="services" id="sluzby">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Služby a ceník</p>
+        <h2>Co pro vás děláme</h2>
+        <p class="lead">U každé služby uvádíme orientační délku, abyste věděla, kolik času si vyhradit. <span class="odhad">ceny jsou odhad</span></p>
+      </div>
+      <div class="price-groups">
+        <div class="price-group">
+          <h3>Kosmetická ošetření</h3>
+          <p>Každé ošetření začíná krátkou konzultací a diagnostikou pleti.</p>
+          <ul class="price-list">
+            <li><span class="name">Základní ošetření pleti <span class="dur">60 min</span></span><span class="price">890 Kč</span><span class="desc">Odlíčení, peeling, maska a krém podle typu pleti.</span></li>
+            <li><span class="name">Hloubkové čištění <span class="dur">90 min</span></span><span class="price">1 190 Kč</span><span class="desc">Ultrazvuková špachtle, ruční čištění, zklidňující maska.</span></li>
+            <li><span class="name">Hydratační ošetření <span class="dur">75 min</span></span><span class="price">1 090 Kč</span><span class="desc">Pro suchou a unavenou pleť, s masáží obličeje.</span></li>
+            <li><span class="name">Masáž obličeje, krku a dekoltu <span class="dur">30 min</span></span><span class="price">490 Kč</span><span class="desc">Samostatně nebo jako doplněk k ošetření.</span></li>
+          </ul>
+        </div>
+        <div class="price-group">
+          <h3>Obočí a řasy</h3>
+          <p>Laminace srovná a zafixuje chloupky do požadovaného tvaru na 6 až 8 týdnů.</p>
+          <ul class="price-list">
+            <li><span class="name">Laminace obočí <span class="dur">45 min</span></span><span class="price">790 Kč</span><span class="desc">Včetně vyživujícího séra na závěr.</span></li>
+            <li><span class="name">Laminace obočí s barvením a úpravou <span class="dur">60 min</span></span><span class="price">990 Kč</span><span class="desc">Nejčastější volba: tvar, barva i laminace najednou.</span></li>
+            <li><span class="name">Úprava a barvení obočí <span class="dur">30 min</span></span><span class="price">350 Kč</span><span class="desc">Vytrhání, zastřižení a barva podle typu obličeje.</span></li>
+            <li><span class="name">Barvení řas <span class="dur">20 min</span></span><span class="price">250 Kč</span><span class="desc">Lze spojit s jakoukoli službou.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="services-note">
+        <span>Dárkové poukazy na libovolnou částku. <span class="odhad">odhad</span></span>
+        <a class="btn" href="#rezervace">Vybrat termín</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAMINACE: POSTUP -->
+  <section class="brow" id="laminace">
+    <div class="wrap">
+      <div class="photo" role="img" aria-label="Místo pro fotografii obočí před a po laminaci"><span class="ph-label">Místo pro fotku před / po</span></div>
+      <div class="brow-text">
+        <p class="eyebrow">Laminace obočí</p>
+        <h2>Jak laminace probíhá</h2>
+        <ol class="steps">
+          <li><div><strong>Konzultace tvaru</strong><span>Probereme, jak má obočí vypadat a jestli ho chcete i dobarvit.</span></div></li>
+          <li><div><strong>Laminační roztok</strong><span>Chloupky zjemníme a vyčešeme do požadovaného směru.</span></div></li>
+          <li><div><strong>Fixace a barva</strong><span>Tvar zafixujeme, případně obočí dobarvíme a upravíme.</span></div></li>
+          <li><div><strong>Výživa</strong><span>Na závěr nanášíme sérum. Prvních 24 hodin obočí nemáčejte.</span></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- O NÁS -->
+  <section class="about" id="o-nas">
+    <div class="wrap">
+      <div class="photo" role="img" aria-label="Místo pro fotografii kosmetičky"><span class="ph-label">Místo pro portrét</span></div>
+      <div class="about-text">
+        <p class="eyebrow">O nás</p>
+        <h2>Malý salon, kde máte čas jen pro sebe</h2>
+        <p>Sabi je komorní kosmetický salon v Pardubicích. Pracujeme vždy s jednou klientkou, bez spěchu a bez čekání v čekárně. Ke každé pleti přistupujeme individuálně a doporučíme jen to, co opravdu potřebuje. <span class="odhad">odhad textu</span></p>
+        <p>Používáme profesionální kosmetiku a pravidelně se vzděláváme v nových technikách ošetření pleti i obočí. <span class="odhad">odhad textu</span></p>
+        <div class="values">
+          <div><h3>Individuálně</h3><p>Ošetření podle aktuálního stavu pleti, ne podle šablony.</p></div>
+          <div><h3>V klidu</h3><p>Dostatek času na konzultaci i na samotné ošetření.</p></div>
+          <div><h3>Online</h3><p>Volné termíny vidíte a rezervujete kdykoli, i večer.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REZERVACE -->
+  <section class="booking" id="rezervace">
+    <div class="wrap">
+      <div class="booking-info">
+        <p class="eyebrow">Rezervace</p>
+        <h2>Vyberte si termín</h2>
+        <p class="lead">Vyplňte službu a čas, který vám vyhovuje. Termín vám potvrdíme SMS nebo e-mailem.</p>
+        <ul>
+          <li>Termín lze zrušit nejpozději 24 hodin předem. <span class="odhad">odhad</span></li>
+          <li>Na laminaci přijďte bez make-upu na obočí.</li>
+          <li>Platit můžete hotově i kartou. <span class="odhad">odhad</span></li>
+        </ul>
+        <p class="embed-note">Tento formulář je v náhledu zatím jen ukázka a nic neodesílá. Sem se vloží buď napojený formulář, nebo rezervační systém (například Reservio nebo Noona) s živými volnými termíny.</p>
+      </div>
+
+      <form class="book" id="book-form" novalidate>
+        <div class="field">
+          <label for="f-service">Služba</label>
+          <select id="f-service" required>
+            <option value="">Vyberte službu</option>
+            <optgroup label="Kosmetická ošetření">
+              <option>Základní ošetření pleti (60 min)</option>
+              <option>Hloubkové čištění (90 min)</option>
+              <option>Hydratační ošetření (75 min)</option>
+              <option>Masáž obličeje, krku a dekoltu (30 min)</option>
+            </optgroup>
+            <optgroup label="Obočí a řasy">
+              <option selected>Laminace obočí s barvením a úpravou (60 min)</option>
+              <option>Laminace obočí (45 min)</option>
+              <option>Úprava a barvení obočí (30 min)</option>
+              <option>Barvení řas (20 min)</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="f-date">Datum</label>
+            <input type="date" id="f-date" required>
+          </div>
+          <fieldset class="field">
+            <legend>Čas</legend>
+            <div class="slots" id="slots"></div>
+          </fieldset>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="f-name">Jméno a příjmení</label>
+            <input id="f-name" autocomplete="name" required value="Jana Ukázková">
+          </div>
+          <div class="field">
+            <label for="f-phone">Telefon</label>
+            <input id="f-phone" type="tel" autocomplete="tel" required value="+420 777 000 000">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-email">E-mail</label>
+          <input id="f-email" type="email" autocomplete="email" placeholder="vas@email.cz">
+        </div>
+        <div class="field">
+          <label for="f-note">Poznámka (nepovinné)</label>
+          <textarea id="f-note" placeholder="Například citlivá pleť nebo alergie"></textarea>
+        </div>
+        <label class="check"><input type="checkbox" id="f-consent" required> Souhlasím se zpracováním osobních údajů pro účely rezervace.</label>
+        <p class="form-error" id="form-error" hidden></p>
+        <button class="btn" type="submit">Odeslat rezervaci</button>
+      </form>
+
+      <div class="done" id="book-done" hidden aria-live="polite">
+        <p class="eyebrow">Ukázka potvrzení</p>
+        <h3>Děkujeme, rezervace je přijata</h3>
+        <dl id="done-list"></dl>
+        <p class="embed-note">V náhledu se nic neodeslalo. Na hotovém webu by vám teď přišlo potvrzení.</p>
+        <button class="btn ghost" type="button" id="book-again">Upravit rezervaci</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAKT -->
+  <section class="contact" id="kontakt">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Kontakt</p>
+        <h2>Kde nás najdete</h2>
+      </div>
+      <div class="contact-grid">
+        <div>
+          <h3>Adresa</h3>
+          <p>Sabi kosmetika<br>Palác Hybských<br>náměstí Republiky 56<br>530 02 Pardubice I – Zelené Předměstí</p>
+        </div>
+        <div>
+          <h3>Telefon a e-mail <span class="odhad">odhad</span></h3>
+          <p id="c-phone">+420 000 000 000</p>
+          <button class="copy-btn" type="button" data-copy="c-phone">Zkopírovat číslo</button>
+          <p id="c-mail" style="margin-top:12px">rezervace@sabi-pardubice.cz</p>
+          <button class="copy-btn" type="button" data-copy="c-mail">Zkopírovat e-mail</button>
+        </div>
+        <div>
+          <h3>Otevírací doba <span class="odhad">odhad</span></h3>
+          <dl class="hours">
+            <dt>Po až Čt</dt><dd>9:00 až 19:00</dd>
+            <dt>Pátek</dt><dd>9:00 až 15:00</dd>
+            <dt>So a Ne</dt><dd>po domluvě</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="map-ph">Místo pro mapu s Palácem Hybských (Mapy.cz nebo Google Maps se vloží na hotovém webu)</div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>© 2026 Sabi kosmetika, Pardubice</span>
+    <span>IČO 00000000 <span class="odhad">odhad</span></span>
+  </div>
+</footer>
+
+<div class="fab"><a class="btn" href="#rezervace">Rezervovat termín</a></div>
+
+<script>
+(function () {
+  // mobilní menu
+  var toggle = document.getElementById('menu-toggle');
+  var menu = document.getElementById('menu');
+  toggle.addEventListener('click', function () {
+    var open = menu.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  menu.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') { menu.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); }
+  });
+
+  // časy (ukázkové volné termíny)
+  var times = ['9:00', '10:30', '12:00', '14:00', '15:30', '17:00'];
+  var slots = document.getElementById('slots');
+  times.forEach(function (t, i) {
+    var id = 'slot-' + i;
+    slots.insertAdjacentHTML('beforeend',
+      '<input type="radio" name="slot" id="' + id + '" value="' + t + '"' + (i === 3 ? ' checked' : '') + '><label for="' + id + '">' + t + '</label>');
+  });
+
+  // datum: nejbližší pracovní den
+  var d = new Date(); d.setDate(d.getDate() + 1);
+  while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() + 1);
+  function iso(x) { return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); }
+  var dateInput = document.getElementById('f-date');
+  var today = new Date();
+  dateInput.min = iso(today);
+  dateInput.value = iso(d);
+
+  // odeslání (v náhledu jen ukázka)
+  var form = document.getElementById('book-form');
+  var done = document.getElementById('book-done');
+  var err = document.getElementById('form-error');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var service = document.getElementById('f-service').value;
+    var slot = form.querySelector('input[name="slot"]:checked');
+    var name = document.getElementById('f-name').value.trim();
+    var phone = document.getElementById('f-phone').value.trim();
+    var missing = [];
+    if (!service) missing.push('službu');
+    if (!dateInput.value) missing.push('datum');
+    if (!slot) missing.push('čas');
+    if (!name) missing.push('jméno');
+    if (!phone) missing.push('telefon');
+    if (!document.getElementById('f-consent').checked) missing.push('souhlas se zpracováním údajů');
+    if (missing.length) { err.textContent = 'Doplňte prosím: ' + missing.join(', ') + '.'; err.hidden = false; return; }
+    err.hidden = true;
+    var dt = new Date(dateInput.value + 'T00:00');
+    var nice = dt.toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'long' });
+    var rows = [['Služba', service], ['Termín', nice + ' v ' + slot.value], ['Jméno', name], ['Telefon', phone]];
+    var list = document.getElementById('done-list');
+    list.innerHTML = '';
+    rows.forEach(function (r) {
+      var a = document.createElement('dt'); a.textContent = r[0];
+      var b = document.createElement('dd'); b.textContent = r[1];
+      list.appendChild(a); list.appendChild(b);
+    });
+    form.hidden = true; done.hidden = false;
+  });
+  document.getElementById('book-again').addEventListener('click', function () { done.hidden = true; form.hidden = false; });
+
+  // kopírování kontaktů
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var el = document.getElementById(btn.getAttribute('data-copy'));
+      var label = btn.textContent;
+      function ok() { btn.textContent = 'Zkopírováno'; setTimeout(function () { btn.textContent = label; }, 1600); }
+      function fallback() { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+      try { navigator.clipboard.writeText(el.textContent.trim()).then(ok, fallback); } catch (e) { fallback(); }
+    });
+  });
+})();
+</script>
