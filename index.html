@@ -179,6 +179,8 @@ nav.main .btn { padding: 11px 20px; color: var(--accent-ink); }
 /* o nás */
 .about .wrap { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
 .about .photo { aspect-ratio: 3 / 4; background-image: var(--img-about); }
+.photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block; }
+.about .photo img { object-position: 50% 25%; }
 .about-text { display: grid; gap: 20px; min-width: 0; }
 .about-text p { max-width: var(--text-w); }
 .values { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 16px; padding-top: 24px; border-top: 1px solid var(--line); }
@@ -331,7 +333,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
   <!-- O NÁS -->
   <section class="about" id="o-nas">
     <div class="wrap">
-      <div class="photo" role="img" aria-label="Místo pro fotografii kosmetičky"><span class="ph-label">Místo pro portrét</span></div>
+      <div class="photo"><img src="img/portret.webp" alt="Kosmetička salonu Sabi" width="900" height="1200" loading="lazy" decoding="async"></div>
       <div class="about-text">
         <p class="eyebrow">O nás</p>
         <h2>Malý salon, kde máte čas jen pro sebe</h2>
